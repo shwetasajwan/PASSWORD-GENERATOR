@@ -1,0 +1,87 @@
+import tkinter as tk
+from tkinter import messagebox
+import string
+import random
+
+# Function to generate the password
+def generate_password():
+    length = int(length_entry.get())
+    include_uppercase = uppercase_var.get()
+    include_lowercase = lowercase_var.get()
+    include_digits = digits_var.get()
+    include_special = special_var.get()
+
+    if not (include_uppercase or include_lowercase or include_digits or include_special):
+        messagebox.showerror("Error", "Please select at least one character set!")
+        return
+
+    character_sets = ""
+    if include_uppercase:
+        character_sets += string.ascii_uppercase
+    if include_lowercase:
+        character_sets += string.ascii_lowercase
+    if include_digits:
+        character_sets += string.digits
+    if include_special:
+        character_sets += string.punctuation
+
+    password = ''.join(random.choice(character_sets) for _ in range(length))
+    password_entry.delete(0, tk.END)
+    password_entry.insert(0, password)
+
+# Function to copy the password to the clipboard
+def copy_to_clipboard():
+    password = password_entry.get()
+    root.clipboard_clear()
+    root.clipboard_append(password)
+    messagebox.showinfo("Password Generator", "Password copied to clipboard!")
+
+# Main GUI
+root = tk.Tk()
+root.title("Advanced Password Generator")
+root.geometry("450x400")
+root.configure(background="light blue")
+
+# Title Label
+title_label = tk.Label(root, text="Advanced Password Generator", font=('Arial', 20, 'bold'), bg="light blue", fg="dark blue")
+title_label.grid(row=0, column=0, columnspan=2, pady=10)
+
+# Length Label and Entry
+length_label = tk.Label(root, text="Length:", font=('Arial', 14), bg="light blue")
+length_label.grid(row=1, column=0, padx=10, pady=10)
+length_entry = tk.Entry(root, font=('Arial', 14), width=10)
+length_entry.grid(row=1, column=1, padx=10, pady=10)
+length_entry.insert(0, "12")  # Default length
+
+# Options for character sets
+uppercase_var = tk.BooleanVar()
+lowercase_var = tk.BooleanVar()
+digits_var = tk.BooleanVar()
+special_var = tk.BooleanVar()
+
+uppercase_check = tk.Checkbutton(root, text="Uppercase Letters", variable=uppercase_var, font=('Arial', 12), bg="light blue")
+uppercase_check.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
+lowercase_check = tk.Checkbutton(root, text="Lowercase Letters", variable=lowercase_var, font=('Arial', 12), bg="light blue")
+lowercase_check.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
+digits_check = tk.Checkbutton(root, text="Digits", variable=digits_var, font=('Arial', 12), bg="light blue")
+digits_check.grid(row=4, column=0, columnspan=2, padx=10, pady=5)
+special_check = tk.Checkbutton(root, text="Special Characters", variable=special_var, font=('Arial', 12), bg="light blue")
+special_check.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
+
+# Generate Button
+generate_button = tk.Button(root, text="Generate Password", command=generate_password, font=('Arial', 14, 'bold'), bg="green", fg="white")
+generate_button.grid(row=6, column=0, columnspan=2, padx=10, pady=10)
+
+# Entry to display the generated password
+password_entry = tk.Entry(root, font=('Arial', 14), width=30, justify='center')
+password_entry.grid(row=7, column=0, columnspan=2, padx=10, pady=10)
+
+# Copy to Clipboard Button
+copy_button = tk.Button(root, text="Copy to Clipboard", command=copy_to_clipboard, font=('Arial', 12, 'bold'), bg="orange", fg="white")
+copy_button.grid(row=8, column=0, columnspan=2, padx=10, pady=10)
+
+# Footer Label
+footer_label = tk.Label(root, text="Secure your passwords!", font=('Arial', 10, 'italic'), bg="light blue", fg="dark green")
+footer_label.grid(row=9, column=0, columnspan=2, pady=10)
+
+root.mainloop()
